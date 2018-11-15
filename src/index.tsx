@@ -20,10 +20,12 @@ import SimplusUI from "./pages/simplus-ui"
 import Mockup from "./pages/mockup/Mockup"
 import Solutions from "./pages/solutions/Solutions"
 import Home from "./pages/home/Home"
+import Logout from "./pages/logout/Logout"
 import Footer from "./pages/simplus-ui/components/Footer"
-// import {Routes as LoginRoutes} from "./pages/login/Routes"
 
-//import {auth} from "./robins"
+import Cookies from 'universal-cookie';
+const cookie = new Cookies();
+
 
 const enhancer = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -38,13 +40,44 @@ export class Routes extends React.Component<any, any>{
 	
 
 	constructor(){
+
 		super()
+		const serverUrl='http://localhost:3000'
+		const token=cookie.get('token');
+		const name=cookie.get('name');
+		
+		if(!token){
+		 window.location.assign(serverUrl);
+	 }
+	 else{
 		this.state = {
-			visible : true
-		}
+			visible : true,
+			name:name
+	 }
+	 }
+		
+	
 		this.handleMenuClick = this.handleMenuClick.bind(this)
 		this.handleVisibleChange = this.handleVisibleChange.bind(this)
 	}
+
+
+	componentDidMount(){
+		
+	//	cookie.set('token','hello');
+	
+	//	console.log(Cookies);
+		// console.log(this.cookie)
+		// this.cookie.set('name','hello')
+		// Cookie.set('jaura','hello');
+// const token = Cookie.get('jaura')
+
+	}
+
+
+	
+	
+		
 
 	handleSelect(value : string){
 	  var val : string = value
@@ -84,10 +117,14 @@ export class Routes extends React.Component<any, any>{
 	</Select>)
 	const menu = (
 		<Menu onClick={this.handleMenuClick}>
+		
 			<Menu.Item key="0"><NavLink activeClassName="active" defaultChecked to="/home"  >Home</NavLink></Menu.Item>
 			<Menu.Item key="1"><NavLink activeClassName="active" to="/components"  >Weaver</NavLink></Menu.Item>
 			<Menu.Item key="2"><NavLink activeClassName="active" to="/solutions"  >Solutions</NavLink></Menu.Item>
 			<Menu.Item key="3"><NavLink activeClassName="active" to="/mockups"  >Mockups</NavLink></Menu.Item>
+			<Menu.Item key="4"><NavLink activeClassName="active" to="/logout"  >Logout</NavLink></Menu.Item>
+			
+			
 			{/* <Menu.Item key="4">Settings</Menu.Item> */}
 			<Menu.Divider />
 			<Menu.Item key="5">{SelectComponent}</Menu.Item>
@@ -107,11 +144,13 @@ export class Routes extends React.Component<any, any>{
 						</div>
 							}
 							components={SelectComponent}>
-							
-							<NavLink activeClassName="active" defaultChecked to="/home"  ><NavBarItem>Home</NavBarItem></NavLink>
+							<NavLink activeClassName="active" defaultChecked to="/home"><NavBarItem>Welcome {this.state.name}</NavBarItem></NavLink>
+							{/* <NavLink activeClassName="active" defaultChecked to="/home"  ><NavBarItem>Home</NavBarItem></NavLink> */}
 							<NavLink activeClassName="active" to="/components"  ><NavBarItem>Weaver</NavBarItem></NavLink>
 							<NavLink activeClassName="active" to="/solutions"  ><NavBarItem>Solutions</NavBarItem></NavLink>
 							<NavLink activeClassName="active" to="/mockups"  ><NavBarItem>Mockups</NavBarItem></NavLink>
+							<NavLink activeClassName="active" to="/logout"  ><NavBarItem>Logout</NavBarItem></NavLink>
+							{/* <NavBarItem>Settings</NavBarItem> */}
 							{/* <NavBarItem>Settings</NavBarItem> */}
 						</NavBar>
 					</MediaQuery>
@@ -132,6 +171,7 @@ export class Routes extends React.Component<any, any>{
 						<Route path="/components" component={SimplusUI}/>
 						<Route path="/solutions" component={Solutions}/>
 						<Route path="/mockups" component={Mockup}/>
+						<Route path="/logout" component={Logout}/>
 				  </Switch>
 				  <Footer/>
 				</div>
